@@ -3,7 +3,7 @@ import random
 import sys
 
 class Network:
-    def __init__(self, trainingFile, testingFile, neuronsByLayer, layers, epochs, learningRate, seed, afunction, tasktype):
+    def __init__(self, trainingFile, testingFile, neuronsByLayer, layers, epochs, learningRate, seed, afunction, tasktype, step):
         self.f_w=open('weights.dat','ab')
         self.f_dw=open('weights_d.dat','ab')
         self.afunction = afunction
@@ -12,7 +12,7 @@ class Network:
         self.testingFile = testingFile
         self.Layers = layers # must be greater than 2 - we always want to have at least 1 hidden layer
         self.NeuronsByLayer = neuronsByLayer
-        self.stepGen = 0.01
+        self.stepGen = step
         self.a = []
         self.weights = []
         self.biases = [] 
@@ -117,12 +117,12 @@ class Network:
 
     def generateRegions(self):
         test_data = np.genfromtxt(self.testingFile, delimiter=',')[1:,:2]
-        x1_min = np.min(test_data[0])
-        x2_min = np.min(test_data[0])
-        x1_max = np.max(test_data[0])
-        x2_max = np.max(test_data[0])
-        x1s = np.arange(x1_min,x1_max,self.stepGen)
-        x2s = np.arange(x2_min,x2_max,self.stepGen)
+        x1_min = np.min(test_data[:,0])
+        x2_min = np.min(test_data[:,1])
+        x1_max = np.max(test_data[:,0])
+        x2_max = np.max(test_data[:,1])
+        x1s = np.arange(-1.5,1.5,self.stepGen)
+        x2s = np.arange(-1.5,1.5,self.stepGen)
         normal_x1 = self.normaliseDataInput(x1s)
         normal_x2 = self.normaliseDataInput(x2s)
         normal_x = cartesian_product(np.array(normal_x1), np.array(normal_x2))
@@ -133,7 +133,7 @@ class Network:
             if(tasktype == "class"):
                 result = round(result)
             results.append(result)
-        toSave = np.column_stack((normal_x, np.asmatrix(results).transpose()))
+        toSave = np.column_stack((cartesian_product(x1s, x2s), np.asmatrix(results).transpose()))
         np.savetxt("2d_area.csv", toSave, delimiter=",", fmt='%.5e')
 
         
@@ -184,8 +184,9 @@ learningRate = float(sys.argv[6])
 seed = int(sys.argv[7])
 afunc = sys.argv[8]
 tasktype = sys.argv[9]
+step = float(sys.argv[10])
 
-myNetwork = Network(trainingFile, testingFile, neuronsByLayer, layers, epochs, learningRate, seed, afunc, tasktype)
+myNetwork = Network(trainingFile, testingFile, neuronsByLayer, layers, epochs, learningRate, seed, afunc, tasktype, step)
 myNetwork.trainNetwork()
 myNetwork.testNetwork()
 if(tasktype == "class"):

@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.ChartBox = new System.Windows.Forms.PictureBox();
             this.NeuronsByLayerNumber = new System.Windows.Forms.NumericUpDown();
             this.NeuronsByLayerLabel = new System.Windows.Forms.Label();
             this.LayersLabel = new System.Windows.Forms.Label();
@@ -52,9 +52,10 @@
             this.RegressionRadioButton = new System.Windows.Forms.RadioButton();
             this.TypeBox = new System.Windows.Forms.GroupBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.label2 = new System.Windows.Forms.Label();
+            this.RLabel = new System.Windows.Forms.Label();
+            ((System.ComponentModel.ISupportInitialize)(this.ChartBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.NeuronsByLayerNumber)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.LayersNumber)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.EpochsNumber)).BeginInit();
@@ -63,13 +64,14 @@
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
-            // pictureBox1
+            // ChartBox
             // 
-            this.pictureBox1.Location = new System.Drawing.Point(12, 12);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(1428, 741);
-            this.pictureBox1.TabIndex = 0;
-            this.pictureBox1.TabStop = false;
+            this.ChartBox.Location = new System.Drawing.Point(12, 12);
+            this.ChartBox.Name = "ChartBox";
+            this.ChartBox.Size = new System.Drawing.Size(1428, 741);
+            this.ChartBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.ChartBox.TabIndex = 0;
+            this.ChartBox.TabStop = false;
             // 
             // NeuronsByLayerNumber
             // 
@@ -334,15 +336,6 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Files in use";
             // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(24, 40);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(101, 20);
-            this.label2.TabIndex = 24;
-            this.label2.Text = "Training data";
-            // 
             // label3
             // 
             this.label3.AutoSize = true;
@@ -352,11 +345,31 @@
             this.label3.TabIndex = 25;
             this.label3.Text = "Testing data";
             // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(24, 40);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(101, 20);
+            this.label2.TabIndex = 24;
+            this.label2.Text = "Training data";
+            // 
+            // RLabel
+            // 
+            this.RLabel.AutoSize = true;
+            this.RLabel.Location = new System.Drawing.Point(1466, 861);
+            this.RLabel.Name = "RLabel";
+            this.RLabel.Size = new System.Drawing.Size(266, 20);
+            this.RLabel.TabIndex = 28;
+            this.RLabel.Text = "R is drawing the graph, please wait...";
+            this.RLabel.Visible = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1758, 934);
+            this.Controls.Add(this.RLabel);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.TypeBox);
             this.Controls.Add(this.richTextBox1);
@@ -375,10 +388,10 @@
             this.Controls.Add(this.LayersNumber);
             this.Controls.Add(this.NeuronsByLayerLabel);
             this.Controls.Add(this.NeuronsByLayerNumber);
-            this.Controls.Add(this.pictureBox1);
+            this.Controls.Add(this.ChartBox);
             this.Name = "Form1";
             this.Text = "SN Proj1";
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ChartBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.NeuronsByLayerNumber)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.LayersNumber)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.EpochsNumber)).EndInit();
@@ -394,7 +407,7 @@
 
         #endregion
 
-        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.PictureBox ChartBox;
         private System.Windows.Forms.NumericUpDown NeuronsByLayerNumber;
         private System.Windows.Forms.Label NeuronsByLayerLabel;
         private System.Windows.Forms.Label LayersLabel;
@@ -419,6 +432,7 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label RLabel;
     }
 }
 

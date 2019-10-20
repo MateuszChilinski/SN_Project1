@@ -63,6 +63,22 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <None Include="classification\data.simple.test.100.csv" />
+    <None Include="classification\data.simple.test.1000.csv" />
+    <None Include="classification\data.simple.test.10000.csv" />
+    <None Include="classification\data.simple.test.500.csv" />
+    <None Include="classification\data.simple.train.100.csv" />
+    <None Include="classification\data.simple.train.1000.csv" />
+    <None Include="classification\data.simple.train.10000.csv" />
+    <None Include="classification\data.simple.train.500.csv" />
+    <None Include="classification\data.three_gauss.test.100.csv" />
+    <None Include="classification\data.three_gauss.test.1000.csv" />
+    <None Include="classification\data.three_gauss.test.10000.csv" />
+    <None Include="classification\data.three_gauss.test.500.csv" />
+    <None Include="classification\data.three_gauss.train.100.csv" />
+    <None Include="classification\data.three_gauss.train.1000.csv" />
+    <None Include="classification\data.three_gauss.train.10000.csv" />
+    <None Include="classification\data.three_gauss.train.500.csv" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -75,6 +91,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="bpg.py" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

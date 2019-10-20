@@ -1,16 +1,17 @@
 import numpy as np
-
 import random
-
+import sys
 class Network:
-    def __init__(self):
-        self.Layers = 10 # must be greater than 2 - we always want to have at least 1 hidden layer
-        self.NeuronsByLayer = 20
+    def __init__(self, trainingFile, testingFile, neuronsByLayer, layers, epochs, learningRate):
+        self.trainingFile = trainingFile
+        self.testingFile = testingFile
+        self.Layers = layers # must be greater than 2 - we always want to have at least 1 hidden layer
+        self.NeuronsByLayer = neuronsByLayer
         self.a = []
         self.weights = []
         self.biases = [] 
-        self.learningRate = 0.1
-        self.epochs = 1000
+        self.learningRate = learningRate
+        self.epochs = epochs
         self.initialiseData()
         np.random.seed(69142)
         
@@ -23,7 +24,7 @@ class Network:
         self.weights.append(np.random.randn(self.NeuronsByLayer, self.y.shape[1]))
         self.biases.append(np.random.randn(self.y.shape[1]))
     def initialiseData(self):
-        my_data = np.genfromtxt('c:/Users/Mateusz/Desktop/SN_Proj1/classification/data.three_gauss.train.100.csv', delimiter=',')
+        my_data = np.genfromtxt(self.trainingFile, delimiter=',')
         self.mydata = my_data[1:]
         self.x = self.normaliseData(self.mydata[:,:2])
         self.y = self.normaliseData(self.mydata[:,2:3])
@@ -68,12 +69,18 @@ class Network:
         return activation_list, z_list
 
     def testNetwork(self):
-        test_data = np.genfromtxt('c:/Users/Mateusz/Desktop/SN_Proj1/classification/data.three_gauss.test.100.csv', delimiter=',')
+        test_data = np.genfromtxt(self.testingFile, delimiter=',')
         normal_x = self.normaliseData(test_data[1:,:2])
         normal_y = self.normaliseData(test_data[1:,2:3])
+        results = []
         for x,y in zip(normal_x,normal_y):
             a_list, z_list = self.forward(x)
-            print(self.denormaliseData(a_list[-1], test_data[1:,2:3]))
+            #print(self.denormaliseData(a_list[-1], test_data[1:,2:3]))
+            results.append(self.denormaliseData(a_list[-1], test_data[1:,2:3])[0])
+        toSave = test_data[1:, :]
+        toSave = np.column_stack((toSave, results))
+        np.savetxt("xD.csv", toSave, delimiter=",", fmt='%.5e')
+        print("1.0")
 
         
 
@@ -94,7 +101,14 @@ class Network:
 """
 start
 """
+trainingFile = sys.argv[1]
+testingFile = sys.argv[2]
+neuronsByLayer = int(sys.argv[3])
+layers = int(sys.argv[4])
+epochs = int(sys.argv[5])
+learningRate = float(sys.argv[6])
 
-myNetwork = Network()
+
+myNetwork = Network(trainingFile, testingFile, neuronsByLayer, layers, epochs, learningRate)
 myNetwork.trainNetwork()
 myNetwork.testNetwork()

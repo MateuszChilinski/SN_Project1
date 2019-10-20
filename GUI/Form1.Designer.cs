@@ -36,17 +36,18 @@
             this.EpochsLabel = new System.Windows.Forms.Label();
             this.EpochsNumber = new System.Windows.Forms.NumericUpDown();
             this.LearningRateLabel = new System.Windows.Forms.Label();
-            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
+            this.LearningRateNumber = new System.Windows.Forms.NumericUpDown();
             this.RunButton = new System.Windows.Forms.Button();
             this.ChoseTrainingFileTextBox = new System.Windows.Forms.TextBox();
             this.TrainingFileButton = new System.Windows.Forms.Button();
             this.ChooseTestFileButton = new System.Windows.Forms.Button();
             this.ChooseTestFileTextBox = new System.Windows.Forms.TextBox();
+            this.ProgressBar = new System.Windows.Forms.ProgressBar();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.NeuronsByLayerNumber)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.LayersNumber)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.EpochsNumber)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.LearningRateNumber)).BeginInit();
             this.SuspendLayout();
             // 
             // pictureBox1
@@ -155,29 +156,29 @@
             this.LearningRateLabel.TabIndex = 8;
             this.LearningRateLabel.Text = "Learning Rate";
             // 
-            // numericUpDown1
+            // LearningRateNumber
             // 
-            this.numericUpDown1.DecimalPlaces = 2;
-            this.numericUpDown1.Increment = new decimal(new int[] {
+            this.LearningRateNumber.DecimalPlaces = 2;
+            this.LearningRateNumber.Increment = new decimal(new int[] {
             5,
             0,
             0,
             131072});
-            this.numericUpDown1.Location = new System.Drawing.Point(686, 132);
-            this.numericUpDown1.Maximum = new decimal(new int[] {
+            this.LearningRateNumber.Location = new System.Drawing.Point(686, 132);
+            this.LearningRateNumber.Maximum = new decimal(new int[] {
             10,
             0,
             0,
             0});
-            this.numericUpDown1.Minimum = new decimal(new int[] {
+            this.LearningRateNumber.Minimum = new decimal(new int[] {
             5,
             0,
             0,
             131072});
-            this.numericUpDown1.Name = "numericUpDown1";
-            this.numericUpDown1.Size = new System.Drawing.Size(120, 26);
-            this.numericUpDown1.TabIndex = 7;
-            this.numericUpDown1.Value = new decimal(new int[] {
+            this.LearningRateNumber.Name = "LearningRateNumber";
+            this.LearningRateNumber.Size = new System.Drawing.Size(120, 26);
+            this.LearningRateNumber.TabIndex = 7;
+            this.LearningRateNumber.Value = new decimal(new int[] {
             5,
             0,
             0,
@@ -185,12 +186,13 @@
             // 
             // RunButton
             // 
-            this.RunButton.Location = new System.Drawing.Point(741, 322);
+            this.RunButton.Location = new System.Drawing.Point(539, 310);
             this.RunButton.Name = "RunButton";
-            this.RunButton.Size = new System.Drawing.Size(248, 39);
+            this.RunButton.Size = new System.Drawing.Size(267, 39);
             this.RunButton.TabIndex = 9;
             this.RunButton.Text = "Train and test";
             this.RunButton.UseVisualStyleBackColor = true;
+            this.RunButton.Click += new System.EventHandler(this.RunButton_Click);
             // 
             // ChoseTrainingFileTextBox
             // 
@@ -198,6 +200,7 @@
             this.ChoseTrainingFileTextBox.Name = "ChoseTrainingFileTextBox";
             this.ChoseTrainingFileTextBox.Size = new System.Drawing.Size(335, 26);
             this.ChoseTrainingFileTextBox.TabIndex = 10;
+            this.ChoseTrainingFileTextBox.Text = "classification/data.three_gauss.train.100.csv";
             // 
             // TrainingFileButton
             // 
@@ -225,19 +228,29 @@
             this.ChooseTestFileTextBox.Name = "ChooseTestFileTextBox";
             this.ChooseTestFileTextBox.Size = new System.Drawing.Size(335, 26);
             this.ChooseTestFileTextBox.TabIndex = 12;
+            this.ChooseTestFileTextBox.Text = "classification/data.three_gauss.test.100.csv";
+            // 
+            // ProgressBar
+            // 
+            this.ProgressBar.Location = new System.Drawing.Point(540, 366);
+            this.ProgressBar.Name = "ProgressBar";
+            this.ProgressBar.Size = new System.Drawing.Size(266, 35);
+            this.ProgressBar.Step = 1;
+            this.ProgressBar.TabIndex = 14;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1034, 636);
+            this.Controls.Add(this.ProgressBar);
             this.Controls.Add(this.ChooseTestFileButton);
             this.Controls.Add(this.ChooseTestFileTextBox);
             this.Controls.Add(this.TrainingFileButton);
             this.Controls.Add(this.ChoseTrainingFileTextBox);
             this.Controls.Add(this.RunButton);
             this.Controls.Add(this.LearningRateLabel);
-            this.Controls.Add(this.numericUpDown1);
+            this.Controls.Add(this.LearningRateNumber);
             this.Controls.Add(this.EpochsLabel);
             this.Controls.Add(this.EpochsNumber);
             this.Controls.Add(this.LayersLabel);
@@ -251,7 +264,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.NeuronsByLayerNumber)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.LayersNumber)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.EpochsNumber)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.LearningRateNumber)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -267,12 +280,13 @@
         private System.Windows.Forms.Label EpochsLabel;
         private System.Windows.Forms.NumericUpDown EpochsNumber;
         private System.Windows.Forms.Label LearningRateLabel;
-        private System.Windows.Forms.NumericUpDown numericUpDown1;
+        private System.Windows.Forms.NumericUpDown LearningRateNumber;
         private System.Windows.Forms.Button RunButton;
         private System.Windows.Forms.TextBox ChoseTrainingFileTextBox;
         private System.Windows.Forms.Button TrainingFileButton;
         private System.Windows.Forms.Button ChooseTestFileButton;
         private System.Windows.Forms.TextBox ChooseTestFileTextBox;
+        private System.Windows.Forms.ProgressBar ProgressBar;
     }
 }
 

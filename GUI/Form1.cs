@@ -1,13 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace GUI
@@ -19,6 +11,10 @@ namespace GUI
         public Form1()
         {
             InitializeComponent();
+            RunButton.Click += new System.EventHandler(this.RunButton_Click);
+            TrainingFileButton.Click += new System.EventHandler(this.TrainingFileButton_Click);
+            ChooseTestFileButton.Click += new System.EventHandler(this.ChooseTestFileButton_Click);
+            SeedTextBox.KeyPress += SeedTextBox_KeyPress;
         }
 
         private void TrainingFileButton_Click(object sender, EventArgs e)
@@ -55,8 +51,16 @@ namespace GUI
 
         private void RunButton_Click(object sender, EventArgs e)
         {
+            EffectLabel.Visible = false;
+            pythonDone = false;
             var cmd = "-u bpg.py";
-            var args = ChoseTrainingFileTextBox.Text + " " + ChooseTestFileTextBox.Text + " " + NeuronsByLayerNumber.Value + " " + LayersNumber.Value + " " + EpochsNumber.Value + " " + LearningRateNumber.Value;
+            string afunc = "tanh";
+            if (((string)ActivationFunctionComboBox.SelectedItem) == "Sigmoid")
+                afunc = "sig";
+            if (((string)ActivationFunctionComboBox.SelectedItem) == "Other")
+                afunc = "other";
+            var args = ChoseTrainingFileTextBox.Text + " " + ChooseTestFileTextBox.Text + " " + NeuronsByLayerNumber.Value + " " + LayersNumber.Value + " " + EpochsNumber.Value + " " + LearningRateNumber.Value + " " + SeedTextBox.Text + " " +
+                afunc;
             var process = new Process
             {
                 StartInfo = new ProcessStartInfo
@@ -76,20 +80,41 @@ namespace GUI
             process.Start();
             process.BeginOutputReadLine();
         }
-
+        private bool pythonDone = false;
         private void Process_OutputDataReceived(object sender, DataReceivedEventArgs e)
         {
             if (e.Data == null) return;
-            //Debug.WriteLine(e.Data);
-            ProgressBar.Invoke((Action) (() => 
+
+            if (pythonDone == true)
             {
-                ProgressBar.Value = (int)(double.Parse(e.Data) * 100.0);
+                EffectLabel.Invoke((MethodInvoker)(() =>
+                {
+                    EffectLabel.Visible = true;
+                    EffectLabel.Text = "Effectiveness: " + (int)(double.Parse(e.Data) * 100.0) + "%";
+                }
+                ));
+                return;
+            }
+            //Debug.WriteLine(e.Data);
+            ProgressBar.Invoke((MethodInvoker) (() => 
+            {
+                var val = (int) (double.Parse(e.Data) * 100.0);
+                if(val == 100)
+                    pythonDone = true;
+                ProgressBar.Value = val;
                 ProgressBar.Refresh(); 
             }
             
             ));
             //Invoke(new Action(() => ProgressBar.Value = (int)(double.Parse(e.Data) * 100.0)));
             //ProgressBar.Value = (int) (double.Parse(e.Data) * 100.0);
+        }
+        private void SeedTextBox_KeyPress(object sender, System.Windows.Forms.KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+                {
+                    e.Handled = true;
+                }
         }
     }
 }

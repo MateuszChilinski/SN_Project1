@@ -43,6 +43,11 @@
             this.ChooseTestFileButton = new System.Windows.Forms.Button();
             this.ChooseTestFileTextBox = new System.Windows.Forms.TextBox();
             this.ProgressBar = new System.Windows.Forms.ProgressBar();
+            this.SeedLabel = new System.Windows.Forms.Label();
+            this.SeedTextBox = new System.Windows.Forms.TextBox();
+            this.EffectLabel = new System.Windows.Forms.Label();
+            this.ActivationFunctionComboBox = new System.Windows.Forms.ComboBox();
+            this.label1 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.NeuronsByLayerNumber)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.LayersNumber)).BeginInit();
@@ -71,7 +76,7 @@
             this.NeuronsByLayerNumber.TabIndex = 1;
             this.NeuronsByLayerNumber.TabStop = false;
             this.NeuronsByLayerNumber.Value = new decimal(new int[] {
-            10,
+            30,
             0,
             0,
             0});
@@ -88,7 +93,7 @@
             // LayersLabel
             // 
             this.LayersLabel.AutoSize = true;
-            this.LayersLabel.Location = new System.Drawing.Point(554, 70);
+            this.LayersLabel.Location = new System.Drawing.Point(554, 76);
             this.LayersLabel.Name = "LayersLabel";
             this.LayersLabel.Size = new System.Drawing.Size(56, 20);
             this.LayersLabel.TabIndex = 4;
@@ -96,7 +101,7 @@
             // 
             // LayersNumber
             // 
-            this.LayersNumber.Location = new System.Drawing.Point(686, 68);
+            this.LayersNumber.Location = new System.Drawing.Point(687, 74);
             this.LayersNumber.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -111,7 +116,7 @@
             this.LayersNumber.Size = new System.Drawing.Size(120, 26);
             this.LayersNumber.TabIndex = 3;
             this.LayersNumber.Value = new decimal(new int[] {
-            3,
+            10,
             0,
             0,
             0});
@@ -119,7 +124,7 @@
             // EpochsLabel
             // 
             this.EpochsLabel.AutoSize = true;
-            this.EpochsLabel.Location = new System.Drawing.Point(554, 102);
+            this.EpochsLabel.Location = new System.Drawing.Point(555, 115);
             this.EpochsLabel.Name = "EpochsLabel";
             this.EpochsLabel.Size = new System.Drawing.Size(63, 20);
             this.EpochsLabel.TabIndex = 6;
@@ -127,7 +132,7 @@
             // 
             // EpochsNumber
             // 
-            this.EpochsNumber.Location = new System.Drawing.Point(686, 100);
+            this.EpochsNumber.Location = new System.Drawing.Point(687, 113);
             this.EpochsNumber.Maximum = new decimal(new int[] {
             10000,
             0,
@@ -142,7 +147,7 @@
             this.EpochsNumber.Size = new System.Drawing.Size(120, 26);
             this.EpochsNumber.TabIndex = 5;
             this.EpochsNumber.Value = new decimal(new int[] {
-            10,
+            100,
             0,
             0,
             0});
@@ -150,7 +155,7 @@
             // LearningRateLabel
             // 
             this.LearningRateLabel.AutoSize = true;
-            this.LearningRateLabel.Location = new System.Drawing.Point(554, 134);
+            this.LearningRateLabel.Location = new System.Drawing.Point(554, 156);
             this.LearningRateLabel.Name = "LearningRateLabel";
             this.LearningRateLabel.Size = new System.Drawing.Size(110, 20);
             this.LearningRateLabel.TabIndex = 8;
@@ -164,7 +169,7 @@
             0,
             0,
             131072});
-            this.LearningRateNumber.Location = new System.Drawing.Point(686, 132);
+            this.LearningRateNumber.Location = new System.Drawing.Point(687, 154);
             this.LearningRateNumber.Maximum = new decimal(new int[] {
             10,
             0,
@@ -179,7 +184,7 @@
             this.LearningRateNumber.Size = new System.Drawing.Size(120, 26);
             this.LearningRateNumber.TabIndex = 7;
             this.LearningRateNumber.Value = new decimal(new int[] {
-            5,
+            1,
             0,
             0,
             65536});
@@ -192,7 +197,6 @@
             this.RunButton.TabIndex = 9;
             this.RunButton.Text = "Train and test";
             this.RunButton.UseVisualStyleBackColor = true;
-            this.RunButton.Click += new System.EventHandler(this.RunButton_Click);
             // 
             // ChoseTrainingFileTextBox
             // 
@@ -210,7 +214,6 @@
             this.TrainingFileButton.TabIndex = 11;
             this.TrainingFileButton.Text = "Choose training file";
             this.TrainingFileButton.UseVisualStyleBackColor = true;
-            this.TrainingFileButton.Click += new System.EventHandler(this.TrainingFileButton_Click);
             // 
             // ChooseTestFileButton
             // 
@@ -220,7 +223,6 @@
             this.ChooseTestFileButton.TabIndex = 13;
             this.ChooseTestFileButton.Text = "Choose testing file";
             this.ChooseTestFileButton.UseVisualStyleBackColor = true;
-            this.ChooseTestFileButton.Click += new System.EventHandler(this.ChooseTestFileButton_Click);
             // 
             // ChooseTestFileTextBox
             // 
@@ -238,11 +240,65 @@
             this.ProgressBar.Step = 1;
             this.ProgressBar.TabIndex = 14;
             // 
+            // SeedLabel
+            // 
+            this.SeedLabel.AutoSize = true;
+            this.SeedLabel.Location = new System.Drawing.Point(554, 199);
+            this.SeedLabel.Name = "SeedLabel";
+            this.SeedLabel.Size = new System.Drawing.Size(47, 20);
+            this.SeedLabel.TabIndex = 16;
+            this.SeedLabel.Text = "Seed";
+            // 
+            // SeedTextBox
+            // 
+            this.SeedTextBox.Location = new System.Drawing.Point(687, 196);
+            this.SeedTextBox.Name = "SeedTextBox";
+            this.SeedTextBox.Size = new System.Drawing.Size(120, 26);
+            this.SeedTextBox.TabIndex = 17;
+            this.SeedTextBox.Text = "69142";
+            // 
+            // EffectLabel
+            // 
+            this.EffectLabel.AutoSize = true;
+            this.EffectLabel.Location = new System.Drawing.Point(613, 421);
+            this.EffectLabel.Name = "EffectLabel";
+            this.EffectLabel.Size = new System.Drawing.Size(136, 20);
+            this.EffectLabel.TabIndex = 18;
+            this.EffectLabel.Text = "Effectiveness: n%";
+            this.EffectLabel.Visible = false;
+            // 
+            // ActivationFunctionComboBox
+            // 
+            this.ActivationFunctionComboBox.FormattingEnabled = true;
+            this.ActivationFunctionComboBox.Items.AddRange(new object[] {
+            "Sigmoid",
+            "Tanh",
+            "Other"});
+            this.ActivationFunctionComboBox.Location = new System.Drawing.Point(687, 238);
+            this.ActivationFunctionComboBox.Name = "ActivationFunctionComboBox";
+            this.ActivationFunctionComboBox.Size = new System.Drawing.Size(121, 28);
+            this.ActivationFunctionComboBox.TabIndex = 19;
+            this.ActivationFunctionComboBox.Text = "Tanh";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(554, 241);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(109, 20);
+            this.label1.TabIndex = 20;
+            this.label1.Text = "Activation fun.";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1034, 636);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.ActivationFunctionComboBox);
+            this.Controls.Add(this.EffectLabel);
+            this.Controls.Add(this.SeedTextBox);
+            this.Controls.Add(this.SeedLabel);
             this.Controls.Add(this.ProgressBar);
             this.Controls.Add(this.ChooseTestFileButton);
             this.Controls.Add(this.ChooseTestFileTextBox);
@@ -259,7 +315,7 @@
             this.Controls.Add(this.NeuronsByLayerNumber);
             this.Controls.Add(this.pictureBox1);
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "SN Proj1";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.NeuronsByLayerNumber)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.LayersNumber)).EndInit();
@@ -287,6 +343,11 @@
         private System.Windows.Forms.Button ChooseTestFileButton;
         private System.Windows.Forms.TextBox ChooseTestFileTextBox;
         private System.Windows.Forms.ProgressBar ProgressBar;
+        private System.Windows.Forms.Label SeedLabel;
+        private System.Windows.Forms.TextBox SeedTextBox;
+        private System.Windows.Forms.Label EffectLabel;
+        private System.Windows.Forms.ComboBox ActivationFunctionComboBox;
+        private System.Windows.Forms.Label label1;
     }
 }
 

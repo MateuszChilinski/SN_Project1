@@ -273,7 +273,7 @@
             this.ActivationFunctionComboBox.Items.AddRange(new object[] {
             "Sigmoid",
             "Tanh",
-            "Other"});
+            "Arctan"});
             this.ActivationFunctionComboBox.Location = new System.Drawing.Point(687, 238);
             this.ActivationFunctionComboBox.Name = "ActivationFunctionComboBox";
             this.ActivationFunctionComboBox.Size = new System.Drawing.Size(121, 28);

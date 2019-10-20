@@ -3,14 +3,16 @@ import random
 import sys
 
 class Network:
-    def __init__(self, trainingFile, testingFile, neuronsByLayer, layers, epochs, learningRate, seed, afunction):
+    def __init__(self, trainingFile, testingFile, neuronsByLayer, layers, epochs, learningRate, seed, afunction, tasktype):
         self.f_w=open('weights.dat','ab')
         self.f_dw=open('weights_d.dat','ab')
         self.afunction = afunction
+        self.tasktype = tasktype
         self.trainingFile = trainingFile
         self.testingFile = testingFile
         self.Layers = layers # must be greater than 2 - we always want to have at least 1 hidden layer
         self.NeuronsByLayer = neuronsByLayer
+        self.stepGen = 0.01
         self.a = []
         self.weights = []
         self.biases = [] 
@@ -46,10 +48,11 @@ class Network:
         return 2*((data-np.min(data))/(np.max(data)-np.min(data)))-1
     
 
-    def denormaliseDataOutput(self, data, data_prev):
+    def denormaliseDataOutput(self, data):
+        prev_data = self.mydata[:,2:3]
         if(self.afunction == "sig"):
-            return ((data)/(np.max(data_prev)-np.min(data_prev)))+np.min(data_prev)
-        return ((data+1)/2*(np.max(data_prev)-np.min(data_prev)))+np.min(data_prev)
+            return ((data)/(np.max(prev_data)-np.min(prev_data)))+np.min(prev_data)
+        return ((data+1)/2*(np.max(prev_data)-np.min(prev_data)))+np.min(prev_data)
 
     def trainNetwork(self):
         for ep in range(0, self.epochs):
@@ -99,10 +102,10 @@ class Network:
         results = []
         for x,y in zip(normal_x,normal_y):
             a_list, z_list = self.forward(x)
-            #print(self.denormaliseData(a_list[-1], test_data[1:,2:3]))
-            #result = 
-            #print(a_list[-1])
-            results.append(self.denormaliseDataOutput(a_list[-1], test_data[1:,2:3])[0])
+            result = self.denormaliseDataOutput(a_list[-1])[0]
+            if(tasktype == "class"):
+                result = round(result)
+            results.append(result)
         toSave = test_data[1:, :]
         errors = test_data[1:, 2:3]-np.asmatrix(results).transpose()
         toSave = np.column_stack((toSave, results, errors))
@@ -111,6 +114,27 @@ class Network:
         errors_abs = np.abs(errors)
         errors_num = np.count_nonzero(errors_abs < 0.5)
         print(errors_num/len(errors_abs))
+
+    def generateRegions(self):
+        test_data = np.genfromtxt(self.testingFile, delimiter=',')[1:,:2]
+        x1_min = np.min(test_data[0])
+        x2_min = np.min(test_data[0])
+        x1_max = np.max(test_data[0])
+        x2_max = np.max(test_data[0])
+        x1s = np.arange(x1_min,x1_max,self.stepGen)
+        x2s = np.arange(x2_min,x2_max,self.stepGen)
+        normal_x1 = self.normaliseDataInput(x1s)
+        normal_x2 = self.normaliseDataInput(x2s)
+        normal_x = cartesian_product(np.array(normal_x1), np.array(normal_x2))
+        results = []
+        for x in normal_x:
+            a_list, z_list = self.forward(x)
+            result = self.denormaliseDataOutput(a_list[-1])[0]
+            if(tasktype == "class"):
+                result = round(result)
+            results.append(result)
+        toSave = np.column_stack((normal_x, np.asmatrix(results).transpose()))
+        np.savetxt("2d_area.csv", toSave, delimiter=",", fmt='%.5e')
 
         
     def sigm(self, z):
@@ -134,7 +158,13 @@ class Network:
         c = x
         return c
 
-
+def cartesian_product(*arrays):
+    la = len(arrays)
+    dtype = np.result_type(*arrays)
+    arr = np.empty([len(a) for a in arrays] + [la], dtype=dtype)
+    for i, a in enumerate(np.ix_(*arrays)):
+        arr[...,i] = a
+    return arr.reshape(-1, la)
 
 
 """
@@ -153,6 +183,10 @@ epochs = int(sys.argv[5])
 learningRate = float(sys.argv[6])
 seed = int(sys.argv[7])
 afunc = sys.argv[8]
-myNetwork = Network(trainingFile, testingFile, neuronsByLayer, layers, epochs, learningRate, seed, afunc)
+tasktype = sys.argv[9]
+
+myNetwork = Network(trainingFile, testingFile, neuronsByLayer, layers, epochs, learningRate, seed, afunc, tasktype)
 myNetwork.trainNetwork()
 myNetwork.testNetwork()
+if(tasktype == "class"):
+    myNetwork.generateRegions()

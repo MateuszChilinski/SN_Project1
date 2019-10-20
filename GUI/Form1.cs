@@ -13,11 +13,11 @@ namespace GUI
         {
             InitializeComponent();
             RunButton.Click += new System.EventHandler(this.RunButton_Click);
-            TrainingFileButton.Click += new System.EventHandler(this.TrainingFileButton_Click);
-            ChooseTestFileButton.Click += new System.EventHandler(this.ChooseTestFileButton_Click);
             SeedTextBox.KeyPress += SeedTextBox_KeyPress;
             TrainingFileComboBox.DropDown += TrainingFileComboBox_DropDown;
             TestingFileComboBox.DropDown += TestingFileComboBox_DropDown;
+            RegressionRadioButton.CheckedChanged += new System.EventHandler(this.RegressionRadioButton_CheckedChanged);
+            ClassificationRadioButton.CheckedChanged += new System.EventHandler(this.RegressionRadioButton_CheckedChanged);
         }
 
         private void TestingFileComboBox_DropDown(object sender, EventArgs e)
@@ -46,40 +46,10 @@ namespace GUI
             }
         }
 
-        private void TrainingFileButton_Click(object sender, EventArgs e)
-        {
-            var FD = new System.Windows.Forms.OpenFileDialog();
-            if (FD.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-            {
-                string fileToOpen = FD.FileName;
-                ChoseTrainingFileTextBox.Text = fileToOpen;
-                System.IO.FileInfo File = new System.IO.FileInfo(FD.FileName);
-
-                //OR
-
-                System.IO.StreamReader reader = new System.IO.StreamReader(fileToOpen);
-                //etc
-            }
-        }
-
-        private void ChooseTestFileButton_Click(object sender, EventArgs e)
-        {
-            var FD = new System.Windows.Forms.OpenFileDialog();
-            if (FD.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-            {
-                string fileToOpen = FD.FileName;
-                ChooseTestFileTextBox.Text = fileToOpen;
-                System.IO.FileInfo File = new System.IO.FileInfo(FD.FileName);
-
-                //OR
-
-                System.IO.StreamReader reader = new System.IO.StreamReader(fileToOpen);
-                //etc
-            }
-        }
-
         private void RunButton_Click(object sender, EventArgs e)
         {
+            string mydir = ClassificationRadioButton.Checked ? "classification/" : "regression/";
+            string taskType = ClassificationRadioButton.Checked ? "class" : "reg";
             EffectLabel.Visible = false;
             pythonDone = false;
             var cmd = "-u bpg.py";
@@ -88,8 +58,8 @@ namespace GUI
                 afunc = "sig";
             if (((string)ActivationFunctionComboBox.SelectedItem) == "Other")
                 afunc = "other";
-            var args = ChoseTrainingFileTextBox.Text + " " + ChooseTestFileTextBox.Text + " " + NeuronsByLayerNumber.Value + " " + LayersNumber.Value + " " + EpochsNumber.Value + " " + LearningRateNumber.Value + " " + SeedTextBox.Text + " " +
-                afunc;
+            var args = mydir+(string)TrainingFileComboBox.SelectedItem + " " + mydir+ (string)TestingFileComboBox.SelectedItem + " " + NeuronsByLayerNumber.Value + " " + LayersNumber.Value + " " + EpochsNumber.Value + " " + LearningRateNumber.Value + " " + SeedTextBox.Text + " " +
+                afunc + " " + taskType;
             var process = new Process
             {
                 StartInfo = new ProcessStartInfo
@@ -146,9 +116,12 @@ namespace GUI
                 }
         }
 
-        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        private void RegressionRadioButton_CheckedChanged(object sender, EventArgs e)
         {
-
+            TrainingFileComboBox.SelectedItem = null;
+            TrainingFileComboBox.Items.Clear();
+            TestingFileComboBox.SelectedItem = null;
+            TestingFileComboBox.Items.Clear();
         }
     }
 }

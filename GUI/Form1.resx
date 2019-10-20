@@ -117,4 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="richTextBox1.Text" xml:space="preserve">
+    <value>Those are recommended values for tanh and arctan, for sigmoid function it's recommended to increase epochs value.
+
+Also, sigmoid activation function does not really work well with multi-classification.
+
+The files in which data are stored should be put in the right folder, also they should contain "test" or "train" substring to be detected by the system.
+</value>
+  </data>
 </root>

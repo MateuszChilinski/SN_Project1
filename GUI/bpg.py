@@ -101,7 +101,7 @@ class Network:
             a_list, z_list = self.forward(x)
             #print(self.denormaliseData(a_list[-1], test_data[1:,2:3]))
             #result = 
-            print(a_list[-1])
+            #print(a_list[-1])
             results.append(self.denormaliseDataOutput(a_list[-1], test_data[1:,2:3])[0])
         toSave = test_data[1:, :]
         errors = test_data[1:, 2:3]-np.asmatrix(results).transpose()

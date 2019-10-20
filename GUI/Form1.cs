@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
 using System.Windows.Forms;
 
 namespace GUI
@@ -15,6 +16,34 @@ namespace GUI
             TrainingFileButton.Click += new System.EventHandler(this.TrainingFileButton_Click);
             ChooseTestFileButton.Click += new System.EventHandler(this.ChooseTestFileButton_Click);
             SeedTextBox.KeyPress += SeedTextBox_KeyPress;
+            TrainingFileComboBox.DropDown += TrainingFileComboBox_DropDown;
+            TestingFileComboBox.DropDown += TestingFileComboBox_DropDown;
+        }
+
+        private void TestingFileComboBox_DropDown(object sender, EventArgs e)
+        {
+            string mydir = ClassificationRadioButton.Checked ? "classification/" : "regression/";
+            TestingFileComboBox.Items.Clear();
+            string[] files = Directory.GetFiles(mydir);
+
+            foreach (string filePath in files)
+            { 
+                if(filePath.Contains("test"))
+                    TestingFileComboBox.Items.Add(Path.GetFileName(filePath));
+            }
+        }
+
+        private void TrainingFileComboBox_DropDown(object sender, EventArgs e)
+        {
+            string mydir = ClassificationRadioButton.Checked ? "classification/" : "regression/";
+            TrainingFileComboBox.Items.Clear();
+            string[] files = Directory.GetFiles(mydir);
+
+            foreach (string filePath in files)
+            {
+                if (filePath.Contains("train"))
+                    TrainingFileComboBox.Items.Add(Path.GetFileName(filePath));
+            }
         }
 
         private void TrainingFileButton_Click(object sender, EventArgs e)
@@ -115,6 +144,11 @@ namespace GUI
                 {
                     e.Handled = true;
                 }
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

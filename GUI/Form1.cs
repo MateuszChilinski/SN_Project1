@@ -51,7 +51,8 @@ namespace GUI
             string mydir = ClassificationRadioButton.Checked ? "classification/" : "regression/";
             string taskType = ClassificationRadioButton.Checked ? "class" : "reg";
             EffectLabel.Visible = false;
-            pythonDone = false;
+            EffectLabel2.Visible = false;
+            pythonDone = 0;
 
             var cmd = "-u bpg.py";
             string afunc = "tanh";
@@ -59,8 +60,9 @@ namespace GUI
                 afunc = "sig";
             if (((string)ActivationFunctionComboBox.SelectedItem) == "Other")
                 afunc = "other";
+            int biases = BiasesCheckBox.Checked ? 1 : 0;
             var args = mydir + (string)TrainingFileComboBox.SelectedItem + " " + mydir + (string)TestingFileComboBox.SelectedItem + " " + NeuronsByLayerNumber.Value + " " + LayersNumber.Value + " " + EpochsNumber.Value + " " + LearningRateNumber.Value + " " + SeedTextBox.Text + " " +
-                afunc + " " + taskType;
+                afunc + " " + taskType + " " + biases;
             var process = new Process
             {
                 StartInfo = new ProcessStartInfo
@@ -134,17 +136,30 @@ namespace GUI
                 ));
             }
         }
-        private bool pythonDone = false;
+        private int pythonDone = 0;
         private void Process_OutputDataReceived(object sender, DataReceivedEventArgs e)
         {
             if (e.Data == null) return;
 
-            if (pythonDone == true)
+            if (pythonDone == 1)
             {
+                string title = ClassificationRadioButton.Checked ? "Well-guessed samples in %:" : "Average error in %:";
+                pythonDone++;
                 EffectLabel.Invoke((MethodInvoker)(() =>
                 {
                     EffectLabel.Visible = true;
-                    EffectLabel.Text = "Effectiveness: " + (int)(double.Parse(e.Data) * 100.0) + "%";
+                    EffectLabel.Text = title + " " + Math.Round(double.Parse(e.Data), 3);
+                }
+                ));
+                return;
+            }
+            else if(pythonDone == 2)
+            {
+                string title = ClassificationRadioButton.Checked ? "Number of wrong classifications:" : "Standard deviation of error:";
+                EffectLabel.Invoke((MethodInvoker)(() =>
+                {
+                    EffectLabel2.Visible = true;
+                    EffectLabel2.Text = title + " " + Math.Round(double.Parse(e.Data), 3);
                 }
                 ));
                 RunR();
@@ -155,7 +170,7 @@ namespace GUI
             {
                 var val = (int) (double.Parse(e.Data) * 100.0);
                 if(val == 100)
-                    pythonDone = true;
+                    pythonDone = 1;
                 ProgressBar.Value = val;
                 ProgressBar.Refresh(); 
             }

@@ -3,7 +3,7 @@ import random
 import sys
 
 class Network:
-    def __init__(self, trainingFile, testingFile, neuronsByLayer, layers, epochs, learningRate, seed, afunction, tasktype, step):
+    def __init__(self, trainingFile, testingFile, neuronsByLayer, layers, epochs, learningRate, seed, afunction, tasktype, step, biasesEx):
         self.f_w=open('weights.dat','ab')
         self.f_dw=open('weights_d.dat','ab')
         self.afunction = afunction
@@ -12,6 +12,7 @@ class Network:
         self.testingFile = testingFile
         self.Layers = layers # must be greater than 2 - we always want to have at least 1 hidden layer
         self.NeuronsByLayer = neuronsByLayer
+        self.biasesEx = biasesEx
         self.stepGen = step
         self.a = []
         self.weights = []
@@ -23,11 +24,13 @@ class Network:
         self.weights.append(np.random.randn(self.x.shape[1], self.NeuronsByLayer))
         for i in range(self.Layers-3):
             self.weights.append(np.random.randn(self.NeuronsByLayer, self.NeuronsByLayer))
-        for i in range(self.Layers-2):
-            self.biases.append(np.random.randn(self.NeuronsByLayer))
+        if(self.biasesEx == 1):
+            for i in range(self.Layers-2):
+                self.biases.append(np.random.randn(self.NeuronsByLayer))
 
         self.weights.append(np.random.randn(self.NeuronsByLayer, self.y.shape[1]))
-        self.biases.append(np.random.randn(self.y.shape[1]))
+        if(self.biasesEx == 1):
+            self.biases.append(np.random.randn(self.y.shape[1]))
 
         np.savetxt(self.f_w, ["Initial weights"], fmt='%s')
         np.savetxt(self.f_w, self.weights, fmt='%s')
@@ -66,7 +69,8 @@ class Network:
     def trainNetwork(self):
         for ep in range(0, self.epochs):
             print(ep/self.epochs)
-            biases_d = [np.zeros(b.shape) for b in self.biases]
+            if(self.biasesEx == 1):
+                biases_d = [np.zeros(b.shape) for b in self.biases]
             weight_d = [np.zeros(w.shape) for w in self.weights]
 
             mydata = random.sample(list(self.mydata), len(self.mydata))
@@ -84,16 +88,19 @@ class Network:
                 # output error
                 delta = (activation_list[-1]-y) * self.activateFunctionDeriv(z_list[-1])
                 #print(delta)
-                biases_d[-1] = biases_d[-1]+delta
+                if(self.biasesEx == 1):
+                    biases_d[-1] = biases_d[-1]+delta
                 weight_d[-1] = np.asarray([w+wd for w, wd in zip(weight_d[-1], np.dot(np.asmatrix(delta), np.asmatrix(activation_list[-2])))])[0].transpose()
 
                 #backpropagate
                 for l in range(2, self.Layers):
                     delta = np.dot(self.weights[1-l], delta) * self.activateFunctionDeriv(z_list[-l])
-                    biases_d[-l] = biases_d[-l] + delta
+                    if(self.biasesEx == 1):
+                        biases_d[-l] = biases_d[-l] + delta
                     weight_d[-l] = weight_d[-l]+np.dot(np.asmatrix(delta).transpose(), np.asmatrix(activation_list[-l-1])).transpose()
             self.weights = [w-self.learningRate/len(self.x)*(np.asarray(wd)) for w, wd in zip(self.weights, weight_d)]
-            self.biases = [b-self.learningRate/len(self.x)*bd for b, bd in zip(self.biases, biases_d)]
+            if(self.biasesEx == 1):
+                self.biases = [b-self.learningRate/len(self.x)*bd for b, bd in zip(self.biases, biases_d)]
             np.savetxt(self.f_w, ["Weights after iteration " + str(ep+1) + "/" + str(epochs)], fmt='%s')
             np.savetxt(self.f_w, self.weights, fmt='%s')
             np.savetxt(self.f_dw, ["Weights deltas after iteration " + str(ep+1) + "/" + str(epochs)], fmt='%s')
@@ -103,7 +110,10 @@ class Network:
         activation_list = [np.copy(x)]
         z_list = []
         for l in range(self.Layers-1): # hidden layers
-            z = np.dot(self.weights[l].transpose(), activation_list[-1])+self.biases[l]
+            if(self.biasesEx == 1):
+                z = np.dot(self.weights[l].transpose(), activation_list[-1])+self.biases[l]
+            else:
+                z = np.dot(self.weights[l].transpose(), activation_list[-1])
             activation_list.append(self.activationFunction(z))
             z_list.append(z)
         #print(activation_list[-1])
@@ -133,9 +143,15 @@ class Network:
         toSave = np.column_stack((toSave, results, errors))
         np.savetxt("xD.csv", toSave, delimiter=",", fmt='%.5e')
         print("1.0")
-        errors_abs = np.abs(errors)
-        errors_num = np.count_nonzero(errors_abs < 0.5)
-        print(errors_num/len(errors_abs))
+        if(self.tasktype == "class"):
+            errors_abs = np.abs(errors)
+            errors_num = np.count_nonzero(errors_abs < 0.1)
+            print(errors_num/len(errors_abs)*100.0)
+            print(errors_num)
+        else:
+            print(np.sum(np.abs(errors))/np.sum(np.abs(test_data[1:, 1:2]))*100.0)
+            print(np.std(errors))
+        
 
     def generateRegions(self):
         test_data = np.genfromtxt(self.testingFile, delimiter=',')[1:,:2]
@@ -222,9 +238,11 @@ learningRate = float(sys.argv[6])
 seed = int(sys.argv[7])
 afunc = sys.argv[8]
 tasktype = sys.argv[9]
+biasesEx = int(sys.argv[10]) # 1 - yes 0 - no
 step = 0.05
 
-myNetwork = Network(trainingFile, testingFile, neuronsByLayer, layers, epochs, learningRate, seed, afunc, tasktype, step)
+
+myNetwork = Network(trainingFile, testingFile, neuronsByLayer, layers, epochs, learningRate, seed, afunc, tasktype, step, biasesEx)
 myNetwork.trainNetwork()
 myNetwork.testNetwork()
 if(tasktype == "class"):

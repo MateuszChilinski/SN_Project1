@@ -87,7 +87,7 @@ namespace GUI
         }
         private void RunR()
         {
-            var cmd = "class.R";
+            var cmd = ClassificationRadioButton.Checked ? "class.R" : "function.R";
             var args = "";
             var process = new Process
             {

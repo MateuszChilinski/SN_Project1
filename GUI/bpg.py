@@ -34,8 +34,13 @@ class Network:
     def initialiseData(self):
         my_data = np.genfromtxt(self.trainingFile, delimiter=',')
         self.mydata = my_data[1:]
-        self.x = self.normaliseDataInput(self.mydata[:,:2])
-        self.y = self.normaliseDataOutput(self.mydata[:,2:3])
+        if(self.tasktype == "class"):
+            self.x = self.normaliseDataInput(self.mydata[:,:2])
+            self.y = self.normaliseDataOutput(self.mydata[:,2:3])
+        else:
+            self.x = self.normaliseDataInput(self.mydata[:,:1])
+            self.y = self.normaliseDataOutput(self.mydata[:,1:2])
+
 
     def normaliseDataOutput(self, data):
         if(self.afunction == "sig"):
@@ -49,7 +54,11 @@ class Network:
     
 
     def denormaliseDataOutput(self, data):
-        prev_data = self.mydata[:,2:3]
+        if(self.tasktype == "class"):
+            prev_data = self.mydata[:,2:3]
+        else:
+            prev_data = self.mydata[:,1:2]
+        #print(prev_data)
         if(self.afunction == "sig"):
             return ((data)/(np.max(prev_data)-np.min(prev_data)))+np.min(prev_data)
         return ((data+1)/2*(np.max(prev_data)-np.min(prev_data)))+np.min(prev_data)
@@ -61,8 +70,12 @@ class Network:
             weight_d = [np.zeros(w.shape) for w in self.weights]
 
             mydata = random.sample(list(self.mydata), len(self.mydata))
-            self.x = self.normaliseDataInput(self.mydata[:,:2])
-            self.y = self.normaliseDataOutput(self.mydata[:,2:3])
+            if(self.tasktype == "class"):
+                self.x = self.normaliseDataInput(self.mydata[:,:2])
+                self.y = self.normaliseDataOutput(self.mydata[:,2:3])
+            else:
+                self.x = self.normaliseDataInput(self.mydata[:,:1])
+                self.y = self.normaliseDataOutput(self.mydata[:,1:2])
             #print(self.x)
             for x,y in zip(self.x,self.y):
                 #print(x)
@@ -93,21 +106,30 @@ class Network:
             z = np.dot(self.weights[l].transpose(), activation_list[-1])+self.biases[l]
             activation_list.append(self.activationFunction(z))
             z_list.append(z)
+        #print(activation_list[-1])
         return activation_list, z_list
 
     def testNetwork(self):
         test_data = np.genfromtxt(self.testingFile, delimiter=',')
-        normal_x = self.normaliseDataInput(test_data[1:,:2])
-        normal_y = self.normaliseDataOutput(test_data[1:,2:3])
+        if(self.tasktype == "class"):
+            normal_x = self.normaliseDataInput(test_data[1:,:2])
+            normal_y = self.normaliseDataOutput(test_data[1:,2:3])
+        else:
+            normal_x = self.normaliseDataInput(test_data[1:,:1])
+            normal_y = self.normaliseDataOutput(test_data[1:,1:2])
+        #print(normal_x)
         results = []
         for x,y in zip(normal_x,normal_y):
             a_list, z_list = self.forward(x)
             result = self.denormaliseDataOutput(a_list[-1])[0]
-            if(tasktype == "class"):
+            if(self.tasktype == "class"):
                 result = round(result)
             results.append(result)
         toSave = test_data[1:, :]
-        errors = test_data[1:, 2:3]-np.asmatrix(results).transpose()
+        if(self.tasktype == "class"):
+            errors = test_data[1:, 2:3]-np.asmatrix(results).transpose()
+        else:
+            errors = test_data[1:, 1:2]-np.asmatrix(results).transpose()
         toSave = np.column_stack((toSave, results, errors))
         np.savetxt("xD.csv", toSave, delimiter=",", fmt='%.5e')
         print("1.0")
@@ -130,12 +152,28 @@ class Network:
         for x in normal_x:
             a_list, z_list = self.forward(x)
             result = self.denormaliseDataOutput(a_list[-1])[0]
-            if(tasktype == "class"):
+            if(self.tasktype == "class"):
                 result = round(result)
             results.append(result)
         toSave = np.column_stack((cartesian_product(x1s, x2s), np.asmatrix(results).transpose()))
         np.savetxt("2d_area.csv", toSave, delimiter=",", fmt='%.5e')
 
+    def generateFunction(self):
+        test_data = np.genfromtxt(self.testingFile, delimiter=',')[1:,:2]
+        x_min = np.min(test_data[:,0])
+        x_max = np.max(test_data[:,0])
+        xs = np.arange(-10,10,self.stepGen)
+        normal_x = self.normaliseDataInput(xs)
+        results = []
+        for x in normal_x:
+            a_list, z_list = self.forward([x])
+            result = self.denormaliseDataOutput(a_list[-1])[0]
+            if(self.tasktype == "class"):
+                result = round(result)
+            results.append(result)
+        #print(results)
+        toSave = np.column_stack((xs, np.asmatrix(results).transpose()))
+        np.savetxt("function.csv", toSave, delimiter=",", fmt='%.5e')
         
     def sigm(self, z):
         return (1./(1. + np.exp(-z)))
@@ -184,10 +222,12 @@ learningRate = float(sys.argv[6])
 seed = int(sys.argv[7])
 afunc = sys.argv[8]
 tasktype = sys.argv[9]
-step = float(sys.argv[10])
+step = 0.05
 
 myNetwork = Network(trainingFile, testingFile, neuronsByLayer, layers, epochs, learningRate, seed, afunc, tasktype, step)
 myNetwork.trainNetwork()
 myNetwork.testNetwork()
 if(tasktype == "class"):
     myNetwork.generateRegions()
+else:
+    myNetwork.generateFunction()

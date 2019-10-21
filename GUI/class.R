@@ -2,8 +2,10 @@ library(stringr)
 library("dplyr")
 library("ggplot2")
 library(gtools)
+args = commandArgs(trailingOnly=TRUE)
 
-path = "C:/Users/Mateusz/source/repos/MateuszChilinski/SN_Project1/GUI/bin/Debug/"
+path = args[1]
+
 fileToAnalyse = "xD.csv"
 file2d = "2d_area.csv"
 problem = read.table(paste(path, fileToAnalyse, sep=""), 

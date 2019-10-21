@@ -3,7 +3,10 @@ library("dplyr")
 library("ggplot2")
 library(gtools)
 
-path = "C:/Users/Mateusz/source/repos/MateuszChilinski/SN_Project1/GUI/bin/Debug/"
+args = commandArgs(trailingOnly=TRUE)
+
+path = args[1]
+
 fileToAnalyse = "xD.csv"
 file2d = "function.csv"
 problem = read.table(paste(path, fileToAnalyse, sep=""), 

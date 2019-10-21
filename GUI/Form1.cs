@@ -87,8 +87,10 @@ namespace GUI
         }
         private void RunR()
         {
+            var path = System.IO.Path.GetDirectoryName(Application.ExecutablePath);
+
             var cmd = ClassificationRadioButton.Checked ? "class.R" : "function.R";
-            var args = "";
+            var args = path.Replace("\\", "/") + "/";
             var process = new Process
             {
                 StartInfo = new ProcessStartInfo

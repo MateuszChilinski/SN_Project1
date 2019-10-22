@@ -69,6 +69,22 @@
     <None Include="class.R">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="classification\data.circles.test.100.csv" />
+    <None Include="classification\data.circles.test.1000.csv" />
+    <None Include="classification\data.circles.test.10000.csv" />
+    <None Include="classification\data.circles.test.500.csv" />
+    <None Include="classification\data.circles.train.100.csv" />
+    <None Include="classification\data.circles.train.1000.csv" />
+    <None Include="classification\data.circles.train.10000.csv" />
+    <None Include="classification\data.circles.train.500.csv" />
+    <None Include="classification\data.noisyXOR.test.100.csv" />
+    <None Include="classification\data.noisyXOR.test.1000.csv" />
+    <None Include="classification\data.noisyXOR.test.10000.csv" />
+    <None Include="classification\data.noisyXOR.test.500.csv" />
+    <None Include="classification\data.noisyXOR.train.100.csv" />
+    <None Include="classification\data.noisyXOR.train.1000.csv" />
+    <None Include="classification\data.noisyXOR.train.10000.csv" />
+    <None Include="classification\data.noisyXOR.train.500.csv" />
     <None Include="classification\data.simple.test.100.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -117,6 +133,14 @@
     <None Include="classification\data.three_gauss.train.500.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="classification\data.XOR.test.100.csv" />
+    <None Include="classification\data.XOR.test.1000.csv" />
+    <None Include="classification\data.XOR.test.10000.csv" />
+    <None Include="classification\data.XOR.test.500.csv" />
+    <None Include="classification\data.XOR.train.100.csv" />
+    <None Include="classification\data.XOR.train.1000.csv" />
+    <None Include="classification\data.XOR.train.10000.csv" />
+    <None Include="classification\data.XOR.train.500.csv" />
     <None Include="function.R">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -177,6 +201,30 @@
     <None Include="regression\data.cube.train.500.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="regression\data.linear.test.100.csv" />
+    <None Include="regression\data.linear.test.1000.csv" />
+    <None Include="regression\data.linear.test.10000.csv" />
+    <None Include="regression\data.linear.test.500.csv" />
+    <None Include="regression\data.linear.train.100.csv" />
+    <None Include="regression\data.linear.train.1000.csv" />
+    <None Include="regression\data.linear.train.10000.csv" />
+    <None Include="regression\data.linear.train.500.csv" />
+    <None Include="regression\data.multimodal.test.100.csv" />
+    <None Include="regression\data.multimodal.test.1000.csv" />
+    <None Include="regression\data.multimodal.test.10000.csv" />
+    <None Include="regression\data.multimodal.test.500.csv" />
+    <None Include="regression\data.multimodal.train.100.csv" />
+    <None Include="regression\data.multimodal.train.1000.csv" />
+    <None Include="regression\data.multimodal.train.10000.csv" />
+    <None Include="regression\data.multimodal.train.500.csv" />
+    <None Include="regression\data.square.test.100.csv" />
+    <None Include="regression\data.square.test.1000.csv" />
+    <None Include="regression\data.square.test.10000.csv" />
+    <None Include="regression\data.square.test.500.csv" />
+    <None Include="regression\data.square.train.100.csv" />
+    <None Include="regression\data.square.train.1000.csv" />
+    <None Include="regression\data.square.train.10000.csv" />
+    <None Include="regression\data.square.train.500.csv" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -185,6 +233,12 @@
     <Content Include="bpg.py">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="classification\Circles.png" />
+    <Content Include="classification\noisyXOR.png" />
+    <Content Include="classification\XOR.png" />
+    <Content Include="regression\Linear.png" />
+    <Content Include="regression\Multimodal.png" />
+    <Content Include="regression\Square.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

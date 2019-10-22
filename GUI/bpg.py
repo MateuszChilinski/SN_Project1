@@ -67,6 +67,8 @@ class Network:
         return ((data+1)/2*(np.max(prev_data)-np.min(prev_data)))+np.min(prev_data)
 
     def trainNetwork(self):
+        if(self.tasktype == "class"):
+            self.coptions = np.unique(self.normaliseDataOutput(self.mydata[:,2:3]))
         for ep in range(0, self.epochs):
             print(ep/self.epochs)
             if(self.biasesEx == 1):
@@ -131,9 +133,10 @@ class Network:
         results = []
         for x,y in zip(normal_x,normal_y):
             a_list, z_list = self.forward(x)
-            result = self.denormaliseDataOutput(a_list[-1])[0]
             if(self.tasktype == "class"):
-                result = round(result)
+                result = self.denormaliseDataOutput(rounder(self.coptions)(a_list[-1]))[0]
+            else:
+                result = self.denormaliseDataOutput(a_list[-1])[0]
             results.append(result)
         toSave = test_data[1:, :]
         if(self.tasktype == "class"):
@@ -167,9 +170,7 @@ class Network:
         results = []
         for x in normal_x:
             a_list, z_list = self.forward(x)
-            result = self.denormaliseDataOutput(a_list[-1])[0]
-            if(self.tasktype == "class"):
-                result = round(result)
+            result = self.denormaliseDataOutput(rounder(self.coptions)(a_list[-1]))[0]
             results.append(result)
         toSave = np.column_stack((cartesian_product(x1s, x2s), np.asmatrix(results).transpose()))
         np.savetxt("2d_area.csv", toSave, delimiter=",", fmt='%.5e')
@@ -184,8 +185,6 @@ class Network:
         for x in normal_x:
             a_list, z_list = self.forward([x])
             result = self.denormaliseDataOutput(a_list[-1])[0]
-            if(self.tasktype == "class"):
-                result = round(result)
             results.append(result)
         #print(results)
         toSave = np.column_stack((xs, np.asmatrix(results).transpose()))
@@ -220,6 +219,11 @@ def cartesian_product(*arrays):
         arr[...,i] = a
     return arr.reshape(-1, la)
 
+def rounder(values):
+    def f(x):
+        idx = np.argmin(np.abs(values - x))
+        return values[idx]
+    return np.frompyfunc(f, 1, 1)
 
 """
 start

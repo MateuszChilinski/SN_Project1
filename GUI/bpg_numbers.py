@@ -11,7 +11,7 @@ class Network:
         self.f_dw=open('weights_d.dat','ab')
         self.afunction = "sig"
         self.tasktype = "class"
-        self.Layers = 5 # must be greater than 2 - we always want to have at least 1 hidden layer
+        self.Layers = 4 # must be greater than 2 - we always want to have at least 1 hidden layer
         self.NeuronsByLayer = 200
         self.biasesEx = 0
         self.a = []
@@ -21,14 +21,14 @@ class Network:
         self.epochs = 30
         self.initialiseData()
         np.random.seed(3123123)
-        self.weights.append(np.random.randn(self.x.shape[1], 200))
+        self.weights.append(np.random.randn(self.x.shape[1], 800))
         #for i in range(self.Layers-3):
         #    self.weights.append(np.random.randn(self.NeuronsByLayer, self.NeuronsByLayer))
         #if(self.biasesEx == 1):
         #    for i in range(self.Layers-2):
         #        self.biases.append(np.random.randn(self.NeuronsByLayer))
-        self.weights.append(np.random.randn(200, 80))
-        self.weights.append(np.random.randn(80, 10))
+        #self.weights.append(np.random.randn(200, 80))
+        self.weights.append(np.random.randn(800, 10))
         #self.weights.append(np.random.randn(200, 200))
         #
         self.weights.append(np.random.randn(10, 1))
@@ -37,7 +37,7 @@ class Network:
         if(self.biasesEx == 1):
             self.biases.append(np.random.randn(1))
 
-        np.savetxt(self.f_w, ["Initial weights"], fmt='%s') 
+        np.savetxt(self.f_w, ["Initial weights"], fmt='%s')
         np.savetxt(self.f_w, self.weights, fmt='%s')
     def initialiseData(self):
         self.train_images = mnist.train_images()

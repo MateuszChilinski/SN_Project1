@@ -245,7 +245,6 @@ tasktype = sys.argv[9]
 biasesEx = int(sys.argv[10]) # 1 - yes 0 - no
 step = 0.05
 
-
 myNetwork = Network(trainingFile, testingFile, neuronsByLayer, layers, epochs, learningRate, seed, afunc, tasktype, step, biasesEx)
 myNetwork.trainNetwork()
 myNetwork.testNetwork()

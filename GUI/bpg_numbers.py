@@ -4,6 +4,7 @@ import sys
 import struct
 import mnist
 import time
+np.set_printoptions(threshold=sys.maxsize)
 
 class Network:
     def __init__(self):
@@ -11,13 +12,13 @@ class Network:
         self.f_dw=open('weights_d.dat','ab')
         self.afunction = "sig"
         self.tasktype = "class"
-        self.Layers = 4 # must be greater than 2 - we always want to have at least 1 hidden layer
+        self.Layers = 3 # must be greater than 2 - we always want to have at least 1 hidden layer
         self.NeuronsByLayer = 200
         self.biasesEx = 0
         self.a = []
         self.weights = []
         self.biases = [] 
-        self.learningRate = 0.01
+        self.learningRate = 1
         self.epochs = 30
         self.initialiseData()
         np.random.seed(3123123)
@@ -31,7 +32,6 @@ class Network:
         self.weights.append(np.random.randn(800, 10))
         #self.weights.append(np.random.randn(200, 200))
         #
-        self.weights.append(np.random.randn(10, 1))
         for i in range(len(self.weights)):
             self.weights[i] = np.clip(self.weights[i], -1, 1)
         if(self.biasesEx == 1):
@@ -77,10 +77,14 @@ class Network:
             if(self.biasesEx == 1):
                 biases_d = [np.zeros(b.shape) for b in self.biases]
             weight_d = [np.zeros(w.shape) for w in self.weights]
-
+            i = 1
             for x,y in zip(self.x,self.y):
                 #print(x)
                 activation_list, z_list = self.forward(x)
+                #print(activation_list)
+                #exit()
+                #print(activation_list)
+                #exit()
                 # get delta for output
                 # output error
                 delta = (activation_list[-1]-y) * self.activateFunctionDeriv(z_list[-1])
@@ -88,7 +92,7 @@ class Network:
                 if(self.biasesEx == 1):
                     biases_d[-1] = biases_d[-1]+delta
                 weight_d[-1] = delta
-
+                #print(activation_list[0])
                 #backpropagate
                 for l in range(2, self.Layers):
                     delta = np.dot(self.weights[1-l], delta) * self.activateFunctionDeriv(z_list[-l])
@@ -97,6 +101,9 @@ class Network:
                     weight_d[-l] = np.dot(np.asmatrix(delta).transpose(), np.asmatrix(activation_list[-l-1])).transpose()
                 self.weights = [w-self.learningRate*(np.asarray(wd)) for w, wd in zip(self.weights, weight_d)]
                 #print(weight_d)
+                i = i+1
+                if(i % 1000 == 0):
+                    self.testNetwork()
             #self.weights = [w-self.learningRate/len(self.x)*(np.asarray(wd)) for w, wd in zip(self.weights, weight_d)]
             if(self.biasesEx == 1):
                 self.biases = [b-self.learningRate*bd for b, bd in zip(self.biases, biases_d)]
@@ -104,12 +111,12 @@ class Network:
             np.savetxt(self.f_w, self.weights, fmt='%s')
             np.savetxt(self.f_dw, ["Weights deltas after iteration " + str(ep+1) + "/" + str(self.epochs)], fmt='%s')
             np.savetxt(self.f_dw, weight_d, fmt='%s')
-            self.testNetwork()
 
     def forward(self, x):
         activation_list = [np.copy(x)]
         z_list = []
         for l in range(self.Layers-1): # hidden layers
+            #print(self.weights[l])
             if(self.biasesEx == 1):
                 z = np.dot(self.weights[l].transpose(), activation_list[-1])+self.biases[l]
             else:
@@ -126,14 +133,14 @@ class Network:
         #test_images = mnist.test_images()
         #test_labels = mnist.test_labels()
         normal_x = self.normaliseDataInput(test_images)
-        normal_y = self.normaliseDataInput(test_labels)
+        normal_y = self.normaliseDataOutput(test_labels)
 
         #print(normal_x)
         results = []
         results2 = []
         for x,y in zip(normal_x,normal_y):
             a_list, z_list = self.forward(x)
-            result = self.denormaliseDataOutput(rounder(self.coptions)(a_list[-1]))[0]
+            result = (self.denormaliseDataOutput(rounder(self.coptions)(a_list[-1]))[0]).argmax()
             result2 = a_list[-1][0]
             results.append(result)
             results2.append(result2)
@@ -159,7 +166,7 @@ class Network:
             return 1-np.tanh(z)**2
         if(self.afunction == "arctan"):
             return 1/(1+z**2)
-        return (self.sigm(z))*(1-self.sigm(z))
+        return (self.sigm(z))*(1.-self.sigm(z))
 
     def runNetwork(self, x, y):
         c = x

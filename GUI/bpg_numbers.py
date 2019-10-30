@@ -18,7 +18,7 @@ class Network:
         self.weights = []
         self.biases = [] 
         self.learningRate = 0.01
-        self.epochs = 3
+        self.epochs = 30
         self.initialiseData()
         np.random.seed(3123123)
         self.weights.append(np.random.randn(self.x.shape[1], 200))
@@ -37,7 +37,7 @@ class Network:
         if(self.biasesEx == 1):
             self.biases.append(np.random.randn(1))
 
-        np.savetxt(self.f_w, ["Initial weights"], fmt='%s')
+        np.savetxt(self.f_w, ["Initial weights"], fmt='%s') 
         np.savetxt(self.f_w, self.weights, fmt='%s')
     def initialiseData(self):
         self.train_images = mnist.train_images()
@@ -104,6 +104,7 @@ class Network:
             np.savetxt(self.f_w, self.weights, fmt='%s')
             np.savetxt(self.f_dw, ["Weights deltas after iteration " + str(ep+1) + "/" + str(self.epochs)], fmt='%s')
             np.savetxt(self.f_dw, weight_d, fmt='%s')
+            self.testNetwork()
 
     def forward(self, x):
         activation_list = [np.copy(x)]
@@ -139,7 +140,6 @@ class Network:
         errors = (test_labels-results).transpose()
         toSave = np.column_stack((test_labels, results, results2, errors))
         np.savetxt("xD.csv", toSave, delimiter=",", fmt='%.5e')
-        print("1.0")
         errors_abs = np.abs(errors)
         errors_num = np.count_nonzero(errors_abs < 0.1)
         print("Correct guesses: " + str(errors_num/len(errors_abs)*100.0))
@@ -190,6 +190,6 @@ start
 start = time.time()
 myNetwork = Network()
 myNetwork.trainNetwork()
-myNetwork.testNetwork()
+print("1.0")
 end = time.time()
 print(end - start)
